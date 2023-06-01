@@ -23,7 +23,7 @@ public class XlsController {
 
     private String fileLocation;
 
-    @PutMapping(path="/v1/uploadCompanyDataFile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(path="/v1/uploadCompanyDataFile", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public List<ProjectScore> uploadCompanyDataFile(@RequestPart MultipartFile document) throws IOException {
         InputStream fileInputStream = document.getInputStream();
         File currentDirectory = new File(".");
