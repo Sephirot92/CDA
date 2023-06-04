@@ -1,7 +1,6 @@
 package com.computerdecisionassisting.cda.entity;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 
 import static com.computerdecisionassisting.cda.helpers.Constants.*;
 
