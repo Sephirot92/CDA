@@ -1,7 +1,9 @@
 package com.computerdecisionassisting.cda.utils;
 
 import com.computerdecisionassisting.cda.entity.ProjectScore;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -11,13 +13,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class XLSDataLoader {
 
     static Logger logger = LoggerFactory.getLogger(XLSDataLoader.class);
 
-    private static List<String> forbiddenValues = new ArrayList<>(Arrays.asList("Nazwa Projektu", "Dochody", "Liczba Pracowników", "Ocena Klientów", "SLA", "Ocena Wewnętrzna", "Obciążenie zespołu"));
+    private static final List<String> forbiddenValues = new ArrayList<>(Arrays.asList("Nazwa Projektu", "Dochody", "Liczba Pracowników", "Ocena Klientów", "SLA", "Ocena Wewnętrzna", "Obciążenie zespołu"));
 
     public static List<ProjectScore> loadDataToDB(String pathToFile) {
         FileInputStream input = null;
@@ -54,29 +55,19 @@ public class XLSDataLoader {
                         if (counter < 8) {
                             //TODO Refactor this part - 1-7 is to small to cover all posibilities - we won;t be able to get out of the 1st project from xls!!
                             switch (counter) {
-                                case 1:
-                                    projectScore.setProjectName(cell.getStringCellValue());
-                                    break;
-                                case 2:
-                                    projectScore.setProjectEarnings(new BigDecimal(cell.getStringCellValue()));
-                                    break;
-                                case 3:
-                                    projectScore.setNumberOfEmployees(new BigDecimal(cell.getStringCellValue()));
-                                    break;
-                                case 4:
-                                    projectScore.setClientScore(new BigDecimal(cell.getStringCellValue()));
-                                    break;
-                                case 5:
+                                case 1 -> projectScore.setProjectName(cell.getStringCellValue());
+                                case 2 -> projectScore.setProjectEarnings(new BigDecimal(cell.getStringCellValue()));
+                                case 3 -> projectScore.setNumberOfEmployees(new BigDecimal(cell.getStringCellValue()));
+                                case 4 -> projectScore.setClientScore(new BigDecimal(cell.getStringCellValue()));
+                                case 5 -> {
                                     cell.setCellType(CellType.NUMERIC);
                                     projectScore.setSlaValue(new BigDecimal(cell.getNumericCellValue()));
-                                    break;
-                                case 6:
-                                    projectScore.setInnerScore(new BigDecimal(cell.getStringCellValue()));
-                                    break;
-                                case 7:
+                                }
+                                case 6 -> projectScore.setInnerScore(new BigDecimal(cell.getStringCellValue()));
+                                case 7 -> {
                                     cell.setCellType(CellType.NUMERIC);
                                     projectScore.setTeamCoverage(new BigDecimal(cell.getNumericCellValue()));
-                                    break;
+                                }
                             }
                             counter++;
                             if (counter == 8) {
@@ -96,7 +87,7 @@ public class XLSDataLoader {
         }
 
         Comparator<ProjectScore> projectScoreComparator = Comparator.comparing(ProjectScore::getTotalProjectScore);
-        Collections.sort(projectScores, projectScoreComparator);
+        projectScores.sort(projectScoreComparator);
         Collections.reverse(projectScores);
         List<ProjectScore> bestThreeScores = new ArrayList<>();
         for (int i = 0; i < 3; i++) bestThreeScores.add(projectScores.get(i));
