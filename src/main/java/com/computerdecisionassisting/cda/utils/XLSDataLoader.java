@@ -67,13 +67,15 @@ public class XLSDataLoader {
                                     projectScore.setClientScore(new BigDecimal(cell.getStringCellValue()));
                                     break;
                                 case 5:
-                                    projectScore.setSlaValue(new BigDecimal(cell.getStringCellValue()));
+                                    cell.setCellType(CellType.NUMERIC);
+                                    projectScore.setSlaValue(new BigDecimal(cell.getNumericCellValue()));
                                     break;
                                 case 6:
                                     projectScore.setInnerScore(new BigDecimal(cell.getStringCellValue()));
                                     break;
                                 case 7:
-                                    projectScore.setTeamCoverage(new BigDecimal(cell.getStringCellValue()));
+                                    cell.setCellType(CellType.NUMERIC);
+                                    projectScore.setTeamCoverage(new BigDecimal(cell.getNumericCellValue()));
                                     break;
                             }
                             counter++;

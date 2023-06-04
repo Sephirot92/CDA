@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/xlsLoader")
 public class XlsController {
 
